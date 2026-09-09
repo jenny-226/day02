@@ -1,48 +1,46 @@
-#로또v1
-
-import streamlit as st
 import random
 from datetime import datetime
 
-st.title(" 로또 번호 자동 생성기")
-st.caption("버튼을 누르면 1~45 사이의 중복 없는 번호 6개짜리 세트를 5개 만든다")
+import streamlit as st
 
-def lotto_one_set() -> list:
- """ 1~45 에서 중복없이 번호 6개 뽑아 정렬된 리스트로 반환""" 
- number = set() # set[int]() 대신 set() 으로 수정!
- while len(number) < 6:
- number.add(random.randint(1,45)) # 1이상 45이하 정수 하나 뽑기
- return sorted(number)
 
-def get_color_ball(num: int) -> str:
- """ 숫자에 따라 10단위로 다른 색깔 공 이모티콘을 붙여주는 함수 """
- if num < 10: # 1 ~ 9
- return f" {num}"
- elif num < 20: # 10 ~ 19
- return f" {num}"
- elif num < 30: # 20 ~ 29
- return f" {num}"
- elif num < 40: # 30 ~ 39
- return f" {num}"
- else: # 40 ~ 45
- return f" {num}"
+st.set_page_config(page_title="Lotto Number Generator", page_icon="L", layout="centered")
+st.title("\ub85c\ub610 \ubc88\ud638 \uc790\ub3d9 \uc0dd\uc131\uae30")
+st.caption("1~45 \uc0ac\uc774\uc758 \uc911\ubcf5 \uc5c6\ub294 \ubc88\ud638 6\uac1c\ub85c \ub41c \uc138\ud2b8 5\uac1c\ub97c \uc0dd\uc131\ud569\ub2c8\ub2e4.")
+
+
+def lotto_one_set() -> list[int]:
+    """Return six unique lottery numbers from 1 through 45."""
+    return sorted(random.sample(range(1, 46), 6))
+
+
+def get_color_ball(number: int) -> str:
+    """Return a colored HTML ball for one lottery number."""
+    if number < 10:
+        color = "#fbc400"
+    elif number < 20:
+        color = "#69c8f2"
+    elif number < 30:
+        color = "#ff7272"
+    elif number < 40:
+        color = "#aaaaaa"
+    else:
+        color = "#b0d840"
+
+    return (
+        '<span style="display:inline-flex;align-items:center;justify-content:center;'
+        f'width:36px;height:36px;margin:3px;border-radius:50%;background:{color};'
+        f'color:white;font-weight:bold;">{number}</span>'
+    )
+
 
 st.markdown("---")
 
-# if문을 써서 '버튼이 눌렸을 때'만 아래 블록이 실행되도록 만들기
-if st.button(" 5세트 번호 생성하기", key="lotto_generate_btn"):
- 
- # 시간 띄우기
- now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
- st.write(f"생성 시각 : **{now_str}**")
- 
- # 5세트 반복해서 뽑고 출력하기
- for set_index in range(1, 6):
- lotto_num = lotto_one_set() # 번호 6개 뽑기 (예: [3, 15, 22, ...])
- 
- # 뽑힌 숫자 하나하나를 get_color_ball 함수에 넣어서 이모티콘으로 바꾸기
- balls = [get_color_ball(n) for n in lotto_num]
- 
- # 예쁘게 가로로 나열하기
- result_text = " ".join(balls)
- st.write(f"**{set_index}세트** ｜ {result_text}")
+if st.button("5\uc138\ud2b8 \ubc88\ud638 \uc0dd\uc131\ud558\uae30", key="lotto_generate_btn"):
+    now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    st.write(f"\uc0dd\uc131 \uc2dc\uac01: **{now_str}**")
+
+    for set_index in range(1, 6):
+        lotto_numbers = lotto_one_set()
+        balls = "".join(get_color_ball(number) for number in lotto_numbers)
+        st.markdown(f"**{set_index}\uc138\ud2b8** {balls}", unsafe_allow_html=True)
