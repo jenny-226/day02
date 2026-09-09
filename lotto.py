@@ -13,7 +13,7 @@ def lotto_one_set() -> list[int]:
     """Return six unique lottery numbers from 1 through 45."""
     return sorted(random.sample(range(1, 46), 6))
 
-
+#fdf//
 def get_color_ball(number: int) -> str:
     """Return a colored HTML ball for one lottery number."""
     if number < 10:
